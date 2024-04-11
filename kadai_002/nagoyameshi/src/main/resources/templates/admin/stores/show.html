@@ -1,0 +1,257 @@
+	<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<div th:replace="~{fragment :: meta}"></div>
+		
+		<div th:replace="~{fragment ::styles}"></div>
+		
+		<title>店舗詳細</title>
+	</head>
+	
+	<body>
+		<div class="nagoyameshi-wrapper">
+			
+			<!-- ヘッダー -->
+			<div th:replace="~{fragment :: header}"></div>
+		
+			<main>
+				<div class="container pt-4 pb-5 nagoyameshi-container">
+					<div class="row justify-content-center">
+						<div class="col-md-8 col-xl-5 col-lg-6">
+							<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+								<ol class="breadcrumb mb-0">
+									<li class="breadcrumb-item"><a th:href="@{/admin/stores}">店舗一覧</a></li>
+									<li class="breadcrumb-item active" aria-current="page">店舗詳細</li>
+								</ol>
+							</nav>
+							
+							<h1 class="text-center" th:text="${store.getName()}"></h1>
+							
+							<div class="d-flex justify-content-end align-items-end mb-3">
+								<div>
+									<a th:href="@{/admin/stores/__${store.getId()}__/edit}">編集</a>
+								</div>
+							</div>
+							
+							<div th:if="${successMessage}" class="alert alert-success">
+								<span th:text="${successMessage}"></span>
+							</div>
+
+							<div class="mb-3">
+								<img th:if="${store.getImageName()}" th:src="@{/storage/__${store.getImageName()}__}" class="w-100" alt="店舗画像">
+								<img th:unless="${store.getImageName()}" th:src="@{/images/noImage.png}" class="w-100" alt="NO IMAGE">
+							</div>
+							
+							<div class="container mb-4">
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">ID</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="${store.getId()}"></span>
+									</div>
+								</div>
+
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">店舗名</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="${store.getName()}"></span>
+									</div>
+								</div>
+
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">カテゴリ名</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="${store.getCategory().getName()}"></span>
+									</div>
+								</div>
+
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">説明</span>
+									</div>
+			
+									<div class="col">
+										<span class="nagoyameshi-pre-wrap" th:text="${store.getDescription()}"></span>
+									</div>
+								</div>
+
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">下限価格</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="${store.getMinPrice()}"></span>
+									</div>
+								</div>
+
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">上限価格</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="${store.getMaxPrice()}"></span>
+									</div>
+								</div>
+
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">郵便番号</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="〒 + ${store.getPostalCode()}"></span>
+									</div>
+								</div>
+
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">住所</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="${store.getAddress()}"></span>
+									</div>
+								</div>
+					
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">電話番号</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="${store.getPhoneNumber()}"></span>
+									</div>
+								</div>
+
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">営業開始時間</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="${store.getOpenTime()}"></span>
+									</div>
+								</div>
+
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">営業終了時間</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="${store.getCloseTime()}"></span>
+									</div>
+								</div>
+
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">定休日</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="${store.getHoliday()}"></span>
+									</div>
+								</div>
+
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">座席数</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="${store.getCapacity()}"></span>
+									</div>
+								</div>
+								
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">検索キーワード</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="${store.getSearchKeyword()}"></span>
+									</div>
+								</div>
+
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">優先順位</span>
+									</div>
+			
+									<div class="col">
+										<span th:text="${store.getPriority()}"></span>
+									</div>
+								</div>
+
+								<!-- レビュー一覧 -->
+								<h3 class="text-center m-4">レビュー</h3>
+								
+								<div class="mb-3" th:each="review : ${reviewList}">
+									<div class="card h-100">
+										<div class="row g-0">
+											<div class="col-md-8">
+												<div class="card-body">
+													<span th:text="${review.getUser().getName()}" class="m-2"></span>
+													
+													<img th:if="${review.getNumberOfStar() == 1}" th:src="@{/images/star1.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar1">
+													<img th:if="${review.getNumberOfStar() == 2}" th:src="@{/images/star2.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar2">
+													<img th:if="${review.getNumberOfStar() == 3}" th:src="@{/images/star3.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar3">
+													<img th:if="${review.getNumberOfStar() == 4}" th:src="@{/images/star4.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar4">
+													<img th:if="${review.getNumberOfStar() == 5}" th:src="@{/images/star5.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar5">
+													
+													<a href="#" class="nagoyameshi-link-danger m-2" data-bs-toggle="modal" th:data-bs-target="${'#deleteReviewModal' + review.getId()}">削除</a>
+													
+													<!-- 削除用モダール(ポップアップ) -->
+													<div class="modal fade" th:id="${'deleteReviewModal' + review.getId()}" tabindex="-1" th:aria-labelledby="${'deleteReviewModal' + review.getId()}">
+														<div class="modal-dialog">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<h5 class="modal-title" th:id="${'deleteReviewModal' + review.getId()}" th:text="${review.getUser().getName() + '様のレビューを削除してもよろしいですか？'}"></h5>
+																	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button> 
+																</div>
+																<div class="modal-footer">
+																	<form method="post" th:action="@{/admin/stores/__${store.getId()}__/review/__${review.getId()}__/delete}">
+																		<button type="submit" class="btn nagoyameshi-btn-danger text-white shadow-sm">削除</button>
+																	</form>
+																</div>
+															</div>
+														</div>
+													</div>
+													
+													<hr class="mb-3">
+													
+													<h3 class="card-title mb-3" th:text="${review.getCommentTitle()}"></h3>
+
+													<p class="card-text mb-2">
+														<span th:text="${review.getCommentContent()}"></span>
+													</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			
+			</main>
+		
+			<!-- フッター -->
+			<div th:replace="~{fragment :: footer}"></div>
+		</div>
+		
+		<div th:replace="~{fragment :: scripts}"></div>
+	</body>
+</html>

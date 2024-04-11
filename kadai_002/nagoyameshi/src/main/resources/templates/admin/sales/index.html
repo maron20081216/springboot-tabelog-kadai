@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<div th:replace="~{fragment :: meta}"></div>
+		
+		<div th:replace="~{fragment ::styles}"></div>
+		
+		<title>売上管理</title>
+	</head>
+	
+	<body>
+		<div class="nagoyameshi-wrapper">
+			
+			<!-- ヘッダー -->
+			<div th:replace="~{fragment :: header}"></div>
+			
+			<main>
+				<div class="container pb-5 nagoyameshi-container">
+					<div class="row justify-content-center">
+						
+						<h1 class="mb-4 text-center m-4">売上管理</h1>
+						
+						<div class="col-xl-3 col-lg-4 col-md-12">
+							<div class="card mb-3">
+								<div class="card-header">
+									期間別
+								</div>
+								<div class="card-body">
+									<form method="get" th:action="@{/admin/sales}" class="w-100 mb-3">
+										<div class="form-group">
+											<label for="periodFirst">開始日時</label>
+											<input type="datetime-local" id="periodFirst" class="form-control" name="periodFirst" th:value="${periodFirst}">
+										</div>
+										<div class="form-group">
+											<label for="periodLast">終了日時</label>
+											<input type="datetime-local" id="periodLast" class="form-control" name="periodLast" th:value="${periodLast}">
+										</div>
+										<div class="form-group">
+											<button type="submit" class="btn text-white shadow-sm w-100 nagoyameshi-btn">検索</button>
+										</div>
+									</form>
+								</div>
+							</div>
+							
+							
+							<div class="card mb-3">
+								<div class="card-header">
+									年齢別
+								</div>
+								<div class="card-body">
+									<form method="get" th:action="@{/admin/sales}" class="w-100">
+										<div class="form-group mb-3">
+											<select class="form-control form-select" name="age">
+												<option value="" hidden>選択してください</option>
+												<option value="10" th:selected="${age == 10}">10代以下</option>
+												<option value="20" th:selected="${age == 20}">20代</option>
+												<option value="30" th:selected="${age == 30}">30代</option>
+												<option value="40" th:selected="${age == 40}">40代</option>
+												<option value="50" th:selected="${age == 50}">50代</option>
+												<option value="60" th:selected="${age == 60}">60代</option>
+												<option value="70" th:selected="${age == 70}">70代</option>
+												<option value="80" th:selected="${age == 80}">80代</option>
+												<option value="90" th:selected="${age == 90}">90代以上</option>
+											</select>
+										</div>
+										<div class="form-group">
+											<button type="submit" class="btn text-white shadow-sm w-100 nagoyameshi-btn">検索</button>
+										</div>
+									</form>
+								</div>
+							</div>
+
+
+							<div class="card mb-3">
+								<div class="card-header">
+									職業別
+								</div>
+								<div class="card-body">
+									<form method="get" th:action="@{/admin/sales}" class="w-100">
+										<div class="form-group mb-3">
+											<select class="form-control form-select" name="job">
+												<option value="" hidden>選択してください</option>
+												<option value="自営業" th:selected="${job == '自営業'}">自営業</option>
+												<option value="会社員" th:selected="${job == '会社員'}">会社員</option>
+												<option value="公務員" th:selected="${job == '公務員'}">公務員</option>
+												<option value="アルバイト・パート" th:selected="${job == 'アルバイト・パート'}">アルバイト・パート</option>
+												<option value="学生" th:selected="${job == '学生'}">学生</option>
+												<option value="無職" th:selected="${job == '無職'}">無職</option>
+											</select>
+										</div>
+										<div class="form-group">
+											<button type="submit" class="btn text-white shadow-sm w-100 nagoyameshi-btn">検索</button>
+										</div>
+									</form>
+								</div>
+							</div>
+
+
+							<div class="card mb-3">
+								<div class="card-header">
+									会員別
+								</div>
+								<div class="card-body">
+									<form method="get" th:action="@{/admin/sales}" class="w-100">
+										<div class="form-group mb-3">
+											<select class="form-control form-select" name="role">
+												<option value="" hidden>選択してください</option>
+												<option value=1 th:selected="${role == 1}">有料会員</option>
+												<option value=2 th:selected="${role == 2}">無料会員</option>
+											</select>
+										</div>
+										<div class="form-group">
+											<button type="submit" class="btn text-white shadow-sm w-100 nagoyameshi-btn">検索</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+
+						<div class="col">
+							<div class="d-flex justify-content-between flex-wrap m-3">
+								<p class="fs-5 mb-3" th:text="${'検索結果：' + userPage.getTotalElements() + '件' + '（総売上金額：' + saleSum + '円）'}"></p>
+
+								<form method="get" th:action="@{/admin/sales}" class="mb-3 nagoyameshi-sort-box">
+									<input th:if="${periodFirst}" type="hidden" name="periodFirst" th:value="${periodFirst}">
+									<input th:if="${periodLast}" type="hidden" name="periodLast" th:value="${periodLast}">
+									<input th:if="${age}" type="hidden" name="age" th:value="${age}">
+									<input th:if="${job}" type="hidden" name="job" th:value="${job}">
+									<input th:if="${role}" type="hidden" name="role" th:value="${role}">
+								</form>
+							</div>
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">ID</th>
+										<th scope="col">ユーザー名</th>
+										<th scope="col">登録日時</th>
+										<th scope="col">生年月日</th>
+										<th scope="col">職業</th>
+										<th scope="col">会員種別</th>
+										<th scope="col">売上金額</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="user : ${userPage}">
+										<td th:text="${user.getId()}"></td>
+										<td th:text="${user.getName()}"></td>
+										<td th:text="${user.getCreatedAt()}"></td>
+										<td th:text="${user.getBirthday()}"></td>
+										<td th:text="${user.getJob()}"></td>
+										<td th:if="${user.getRole().getId() == 1}">有料会員</td>
+										<td th:if="${user.getRole().getId() == 2}">無料会員</td>
+										<td th:text="${saleMap.get(user.getId())}"></td>
+									</tr>
+								</tbody>
+							</table>
+							
+							<!-- ページネーション -->
+							<div th:if="${userPage.getTotalPages() > 1}" class="d-flex justify-content-center">
+								<nav aria-label="売上管理一覧ページ">
+									<ul class="pagination">
+										<li class="page-item">
+											<span th:if="${userPage.isFirst()}" class="page-link disabled">前</span>
+											<a th:unless="${userPage.isFirst()}" th:href="@{/admin/sales(page = ${userPage.getNumber() - 1}, periodFirst = ${periodFirst}, periodLast = ${periodLast}, age = ${age}, job = ${job}, role = ${role})}" class="page-link nagoyameshi-page-link">前</a>
+										</li>
+										<li th:each="i : ${#numbers.sequence(0, userPage.getTotalPages() - 1)}" class="page-item">
+											<span th:if="${i == userPage.getNumber()}" class="page-link active nagoyameshi-active" th:text="${i + 1}"></span>
+											<a th:unless="${i == userPage.getNumber()}" th:href="@{/admin/sales(page = ${i}, periodFirst = ${periodFirst}, periodLast = ${periodLast}, age = ${age}, job = ${job}, role = ${role})}" class="page-link nagoyameshi-page-link" th:text="${i + 1}"></a>
+										</li>
+										<li class="page-item">
+											<span th:if="${userPage.isLast()}" class="page-link disabled">次</span>
+											<a th:unless="${userPage.isLast()}" th:href="@{/admin/sales(page = ${userPage.getNumber() + 1}, periodFirst = ${periodFirst}, periodLast = ${periodLast}, age = ${age}, job = ${job}, role = ${role})}" class="page-link nagoyameshi-page-link">次</a>
+										</li>
+									</ul>
+								</nav>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</main>
+
+			<!-- フッター -->
+			<div th:replace="~{fragment :: footer}"></div>
+		</div>
+		
+		<div th:replace="~{fragment :: scripts}"></div>
+	</body>
+</html>

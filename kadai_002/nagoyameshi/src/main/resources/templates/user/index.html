@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<div th:replace="~{fragment :: meta}"></div>
+		
+		<div th:replace="~{fragment ::styles}"></div>
+		
+		<title>会員情報</title>
+	</head>
+	
+	<body>
+		<div class="nagoyameshi-wrapper">
+			
+			<!-- ヘッダー -->
+			<div th:replace="~{fragment :: header}"></div>
+			
+			<main>
+				<div class="container pb-5 nagoyameshi-container">
+					<div class="row justify-content-center">
+						<div class="col-xl-5 col-lg-6 col-md-8">
+							<nav class="my-3" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+								<ol class="breadcrumb mb-0">
+									<li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
+									<li class="breadcrumb-item active" aria-current="page">会員情報</li>
+								</ol>
+							</nav>
+							
+							<h1 class="mb-3 text-center">会員情報</h1>
+							
+							<div class="d-flex justify-content-end align-items-end mb-3">
+								<div>
+									<a th:href="@{/user/edit}">編集</a>
+								</div>
+							</div>
+							
+							<div th:if="${successMessage}" class="alert alert-info">
+								<span th:text="${successMessage}"></span>
+							</div>
+							
+							<div class="container mb-4">
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">氏名</span>
+									</div>
+									
+									<div class="col">
+										<span th:text="${user.getName()}"></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="container mb-4">
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">メールアドレス</span>
+									</div>
+									
+									<div class="col">
+										<span th:text="${user.getEmail()}"></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="container mb-4">
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">生年月日</span>
+									</div>
+									
+									<div class="col">
+										<span th:text="${user.getBirthday()}"></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="container mb-4">
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">職業</span>
+									</div>
+									
+									<div class="col">
+										<span th:text="${user.getJob()}"></span>
+									</div>
+								</div>
+							</div>
+							
+							<div sec:authorize="hasRole('ROLE_FREEGENERAL')" class="d-flex justify-content-center">
+								<input type="hidden" name="priceId" value="price_1OxTIzA31AgWmSsADU39aTLS">
+								<button id="paymentButton" class="btn text-white shadow-sm w-100 nagoyameshi-btn">有料会員へグレードアップする</button>
+							</div>
+
+							<div sec:authorize="hasRole('ROLE_PAIDGENERAL')" class="d-flex justify-content-center">
+								<a href="#" data-bs-toggle="modal" data-bs-target="#downGradeModal" class="btn text-white shadow-sm w-100 nagoyameshi-btn">無料会員へグレードダウンする</a>
+							</div>
+
+							<!-- グレードダウン用モジュール -->
+							<div class="modal fade" id="downGradeModal" tabindex="-1" aria-labelledby="downGradeModal">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="downGradeModal">無料会員へグレードダウンしてもよろしいですか？</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button> 
+										</div>
+										<div class="modal-footer">
+											<a th:href="@{/user/downgraded}" class="btn nagoyameshi-btn-danger text-white shadow-sm">OK</a>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</main>
+
+			<!-- フッター -->
+			<div th:replace="~{fragment :: footer}"></div>
+		</div>
+		
+		<div th:replace="~{fragment :: scripts}"></div>
+		<script src="https://js.stripe.com/v3"></script>
+		<script th:inline="javascript">
+			const sessionId = /*[[${sessionId}]]*/"sessionId";
+		</script>
+		<script th:src="@{/js/stripe.js}"></script>
+	</body>
+</html>

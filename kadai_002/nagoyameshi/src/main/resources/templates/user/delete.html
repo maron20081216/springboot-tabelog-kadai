@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<div th:replace="~{fragment :: meta}"></div>
+		
+		<div th:replace="~{fragment ::styles}"></div>
+		
+		<title>退会</title>
+	</head>
+	<body>
+		<div class="nagoyameshi-wrapper">
+			
+			<!-- ヘッダー -->
+			<div th:replace="~{fragment :: header}"></div>
+			
+			<main>
+				<div class="container pb-5 nagoyameshi-container">
+					<div class="row justify-content-center">
+						<div class="col-xl-5 col-lg-6 col-md-8">
+							<nav class="my-3" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+								<ol class="breadcrumb mb-0">
+									<li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
+									<li class="breadcrumb-item active" aria-current="page">退会</li>
+								</ol>
+							</nav>
+							
+							<h1 class="mb-4 text-center">退会</h1>
+							
+							<h2 class="text-center bg-danger text-white">退会前に必ずご確認ください！</h2><br>
+							
+							<div class="mb-3">
+								<p class="text-danger">
+									・NAGOYAMESHIから退会すると、NAGOYAMESHIの会員向けサービスはご利用できなくなります。<br>
+									・有料会員様の場合、決済済みの月額料金は返金されません。<br>
+									・退会後は元に戻すことはできません。<br><br>
+								</p>
+							</div>
+							
+							<form>
+								<input type="checkbox" name="agree" id="agree" value="agree_ok">
+								<label for="agree">上記内容を確認し、了承しました。</label><br><br>
+							
+								<div class="text-center">
+									<input type="button" value="退会" data-bs-toggle="modal" data-bs-target="#deleteUserModal" class="btn text-white shadow-sm btn-danger" id="btn_agree" disabled>
+
+									<!-- 退会用モジュール -->
+									<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModal">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="deleteUserModal">退会してもよろしいですか？</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button> 
+												</div>
+												<div class="modal-footer">
+													<a th:href="@{/user/deleted}" class="btn nagoyameshi-btn-danger text-white shadow-sm">退会</a>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+
+								</div>
+							</form>
+							
+						</div>
+					</div>
+				</div>
+				
+			</main>
+
+			<!-- フッター -->
+			<div th:replace="~{fragment :: footer}"></div>
+		</div>
+		
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script th:src="@{/js/agree.js}"></script>
+		<div th:replace="~{fragment :: scripts}"></div>
+	</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<div th:replace="~{fragment :: meta}"></div>
+		
+		<div th:replace="~{fragment ::styles}"></div>
+		
+		<!-- Flatpickr -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+		
+		<title>店舗詳細</title>
+	</head>
+	
+	<body>
+		<div class="nagoyameshi-wrapper">
+			
+			<!-- ヘッダー -->
+			<div th:replace="~{fragment :: header}"></div>
+			
+			<main>
+				<div class="container pt-4 pb-5 nagoyameshi-container">
+					<div class="row justify-content-center">
+						<div class="col-xxl-9 col-xl-10 col-lg-11">
+							<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+								<ol class="breadcrumb mb-0">
+									<li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
+									<li class="breadcrumb-item"><a th:href="@{/stores}">店舗一覧</a></li>
+									<li class="breadcrumb-item active" aria-current="page">店舗詳細</li>
+								</ol>
+							</nav>
+							
+							<h1 class="mb-4 text-center" th:text="${store.getName()}"></h1>
+							
+							<div th:if="${successMessage}" class="alert alert-success">
+								<span th:text="${successMessage}"></span>
+							</div>
+							
+							<div th:if="${errorMessage}" class="alert alert-danger">
+								<span th:text="${errorMessage}"></span>
+							</div>
+
+							<div class="mb-4">
+								<img th:if="${store.getImageName()}" th:src="@{/storage/__${store.getImageName()}__}" class="w-100" alt="店舗画像">
+								<img th:unless="${store.getImageName()}" th:src="@{/images/noImage.png}" class="w-100" alt="NO IMAGE">
+							</div>
+							
+							<div class="container">
+								<div class="row">
+									<div class="col-lg-8 container mb-4">
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">店舗名</span>
+											</div>
+											
+											<div class="col">
+												<span th:text="${store.getName()}"></span>
+											</div>
+										</div>
+										
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">カテゴリ名</span>
+											</div>
+											
+											<div class="col">
+												<span th:text="${store.getCategory().getName()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">説明</span>
+											</div>
+											
+											<div class="col">
+												<span th:text="${store.getDescription()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">下限価格</span>
+											</div>
+											
+											<div class="col">
+												<span th:text="${#numbers.formatInteger(store.getMinPrice(), 1, 'COMMA') + '円'}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">上限価格</span>
+											</div>
+											
+											<div class="col">
+												<span th:text="${#numbers.formatInteger(store.getMaxPrice(), 1, 'COMMA') + '円'}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">郵便番号</span>
+											</div>
+											
+											<div class="col">
+												<span th:text="${store.getPostalCode()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">住所</span>
+											</div>
+											
+											<div class="col">
+												<span th:text="${store.getAddress()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">電話番号</span>
+											</div>
+											
+											<div class="col">
+												<span th:text="${store.getPhoneNumber()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">営業開始時間</span>
+											</div>
+											
+											<div class="col">
+												<span th:text="${store.getOpenTime()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">営業終了時間</span>
+											</div>
+											
+											<div class="col">
+												<span th:text="${store.getCloseTime()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">定休日</span>
+											</div>
+											
+											<div class="col">
+												<span th:text="${store.getHoliday()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">座席数</span>
+											</div>
+											
+											<div class="col">
+												<span th:text="${store.getCapacity() + '人'}"></span>
+											</div>
+										</div>
+									</div>
+																		
+									<!-- 予約・お気に入り登録・レビュー欄 -->
+									<div sec:authorize="hasRole('ROLE_FREEGENERAL')" class="col-lg-4 px-0 ps-lg-4 mb-4">
+										<div class="card">
+											<div class="card-body">
+												<p class="card-text">下記を利用するには<a th:href="@{/user}">有料会員へのグレードアップ</a>が必要です。</p>
+												<button type="submit" class="btn text-white shadow-sm w-100 nagoyameshi-btn" disabled>予約する</button>
+												<button type="submit" class="btn text-white shadow-sm w-100 nagoyameshi-btn" disabled>お気に入り登録</button>
+												<button type="submit" class="btn text-white shadow-sm w-100 nagoyameshi-btn" disabled>レビュー投稿</button>
+											</div>
+										</div>
+									</div>
+									
+									<div sec:authorize="hasRole('ROLE_PAIDGENERAL')" class="col-lg-4 px-0 ps-lg-4 mb-4">
+										<div class="card">
+											<div class="card-body">
+												<form method="post" th:action="@{/stores/__${store.getId()}__/reservations/input}" th:object="${reservationInputForm}">
+													<div class="form-group mb-2">
+														<label for="reservationDateAndTime" class="col-form-label text-md-left fw-bold">予約日・予約時間</label>
+														<div th:if="${#fields.hasErrors('reservationDateAndTime')}" class="text-danger small mb-2" th:errors="*{reservationDateAndTime}"></div>
+														<input type="text" class="form-control" th:field="*{reservationDateAndTime}">
+													</div>
+													
+													<div class="form-group mb-4">
+														<label for="numberOfPeople" class="col-form-label text-md-left fw-bold">予約人数</label>
+														<div th:if="${#fields.hasErrors('numberOfPeople')}" class="text-danger small mb-2" th:errors="*{numberOfPeople}"></div>
+														<input type="number" class="form-control" th:field="*{numberOfPeople}" min="1">
+													</div>
+													
+													<div class="form-group">
+														<button type="submit" class="btn text-white shadow-sm w-100 nagoyameshi-btn">予約する</button>
+													</div>
+												</form>
+											</div>
+										</div>
+										
+										<br>
+
+										<div class="card">
+											<div class="card-body">
+												<a th:if="${favoriteCheck}" th:href="@{/stores/__${store.getId()}__/favorites/delete}">
+													<img th:src="@{/images/heart_on.png}" class="nagoyameshi-favorite-logo me-1" alt="favorite_heart_on">													
+													<span class="col-form-label text-md-left fw-bold">お気に入り</span>
+												</a>
+												<a th:unless="${favoriteCheck}" th:href="@{/stores/__${store.getId()}__/favorites/create}">
+													<img th:src="@{/images/heart_off.png}" class="nagoyameshi-favorite-logo me-1" alt="favorite_heart_off">
+													<span class="col-form-label text-md-left fw-bold">お気に入り</span>
+												</a>
+											</div>
+										</div>
+										
+										<br>
+										
+										<div class="card" th:unless="${reviewCheck}">
+											<div class="card-body">
+												<form method="post" th:action="@{/stores/__${store.getId()}__/reviews}" th:object="${reviewRegisterForm}">
+													<div class="form-group mb-2">
+														<span class="col-form-label text-md-left fw-bold">評価</span>
+														<div th:if="${#fields.hasErrors('numberOfStar')}" class="text-danger small mb-2" th:errors="*{numberOfStar}"></div>
+														<p>
+															<input type="radio" value=1 name="score1" th:field="*{numberOfStar}">
+															<label for="numberOfStar" class="col-form-label text-md-left fw-bold">1　</label>
+															<input type="radio" value=2 name="score2" th:field="*{numberOfStar}">
+															<label for="numberOfStar" class="col-form-label text-md-left fw-bold">2 　</label>
+															<input type="radio" value=3 name="score3" th:field="*{numberOfStar}">
+															<label for="numberOfStar" class="col-form-label text-md-left fw-bold">3 　</label>
+															<input type="radio" value=4 name="score4" th:field="*{numberOfStar}">
+															<label for="numberOfStar" class="col-form-label text-md-left fw-bold">4 　</label>
+															<input type="radio" value=5 name="score5" th:field="*{numberOfStar}">
+															<label for="numberOfStar" class="col-form-label text-md-left fw-bold">5 　</label>															
+														</p>
+													</div>
+													
+													<div class="form-group mb-4">
+														<label for="commentTitle" class="col-form-label text-md-left fw-bold">題名</label>
+														<div th:if="${#fields.hasErrors('commentTitle')}" class="text-danger small mb-2" th:errors="*{commentTitle}"></div>
+														<input type="text" class="form-control" th:field="*{commentTitle}">
+													</div>
+													
+													<div class="form-group mb-4">
+														<label for="commentContent" class="col-form-label text-md-left fw-bold">コメント</label>
+														<div th:if="${#fields.hasErrors('commentContent')}" class="text-danger small mb-2" th:errors="*{commentContent}"></div>
+														<textarea rows="3" class="form-control" th:field="*{commentContent}"></textarea>
+													</div>
+													<div class="form-group">
+														<button type="submit" class="btn text-white shadow-sm w-100 nagoyameshi-btn">投稿する</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+									
+									<!-- レビュー一覧 -->
+									<div class="d-flex justify-content-between flex-wrap">
+										<p>
+											<span th:if="${reviewCheck}" class="fs-5 mb-3 fw-bold" th:text="${'レビュー（' + (reviewList.size() + 1) + '件）'}"></span>
+											<span th:unless="${reviewCheck}" class="fs-5 mb-3 fw-bold" th:text="${'レビュー（' + reviewList.size() + '件）'}"></span>
+											<br><br>
+											<img th:if="${starAverage <= 0.5}" th:src="@{/images/star0.png}" class="nagoyameshi-review-logo me-1" alt="starAverage0">
+											<img th:if="${starAverage >= 0.5 && starAverage < 1}" th:src="@{/images/star0.5.png}" class="nagoyameshi-review-logo me-1" alt="starAverage0.5">
+											<img th:if="${starAverage == 1}" th:src="@{/images/star1.png}" class="nagoyameshi-review-logo me-1" alt="starAverage1">
+											<img th:if="${starAverage >= 1.5 && starAverage < 2}" th:src="@{/images/star1.5.png}" class="nagoyameshi-review-logo me-1" alt="starAverage1.5">
+											<img th:if="${starAverage == 2}" th:src="@{/images/star2.png}" class="nagoyameshi-review-logo me-1" alt="starAverage2">
+											<img th:if="${starAverage >= 2.5 && starAverage < 3}" th:src="@{/images/star2.5.png}" class="nagoyameshi-review-logo me-1" alt="starAverage2.5">
+											<img th:if="${starAverage == 3}" th:src="@{/images/star3.png}" class="nagoyameshi-review-logo me-1" alt="starAverage3">
+											<img th:if="${starAverage >= 3.5 && starAverage < 4}" th:src="@{/images/star3.5.png}" class="nagoyameshi-review-logo me-1" alt="starAverage3.5">
+											<img th:if="${starAverage == 4}" th:src="@{/images/star4.png}" class="nagoyameshi-review-logo me-1" alt="starAverage4">
+											<img th:if="${starAverage >= 4.5 && starAverage < 5}" th:src="@{/images/star4.5.png}" class="nagoyameshi-review-logo me-1" alt="starAverage4.5">
+											<img th:if="${starAverage == 5}" th:src="@{/images/star5.png}" class="nagoyameshi-review-logo me-1" alt="starAverage5">
+											<span class="fs-5 mb-3" th:text="${starAverage + ' / 5'}"></span>
+										</p>
+									</div>
+									
+									
+									<!-- ユーザーがレビュー書いた場合のみ、ユーザーのレビューを表示 -->
+									<div class="mb-3" th:if="${reviewCheck}">
+										<div class="card h-100">
+											<div class="row g-0">
+												<div class="col-md-8">
+													<div class="card-body">
+														<span th:text="${userReview.getUser().getName()}" class="m-2"></span>
+														
+														<img th:if="${userReview.getNumberOfStar() == 1}" th:src="@{/images/star1.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar1">
+														<img th:if="${userReview.getNumberOfStar() == 2}" th:src="@{/images/star2.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar2">
+														<img th:if="${userReview.getNumberOfStar() == 3}" th:src="@{/images/star3.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar3">
+														<img th:if="${userReview.getNumberOfStar() == 4}" th:src="@{/images/star4.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar4">
+														<img th:if="${userReview.getNumberOfStar() == 5}" th:src="@{/images/star5.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar5">
+														
+														<a th:href="@{/stores/__${store.getId()}__/reviews/edit}" class="m-2">編集</a>
+														
+														<a href="#" class="nagoyameshi-link-danger m-2" data-bs-toggle="modal" data-bs-target="#deleteReviewModal">削除</a>
+														
+														<hr class="mb-3">
+
+														<h3 class="card-title mb-3" th:text="${userReview.getCommentTitle()}"></h3>
+
+														<p class="card-text mb-2">
+															<span th:text="${userReview.getCommentContent()}"></span>
+														</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<!-- 削除用モダール(ポップアップ) -->
+									<div class="modal fade" id="deleteReviewModal" tabindex="-1" aria-labelledby="deleteReviewModal">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="deleteReviewModal">削除してもよろしいですか？</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button> 
+												</div>
+												<div class="modal-footer">
+													<form method="post" th:action="@{/stores/__${store.getId()}__/reviews/delete}">
+														<button type="submit" class="btn nagoyameshi-btn-danger text-white shadow-sm">削除</button>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<!-- ユーザー以外のレビューを表示 -->
+									<div class="mb-3" th:each="review : ${reviewList}">
+										<div class="card h-100">
+											<div class="row g-0">
+												<div class="col-md-8">
+													<div class="card-body">
+														<span th:text="${review.getUser().getName()}" class="m-2"></span>
+														
+														<img th:if="${review.getNumberOfStar() == 1}" th:src="@{/images/star1.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar1">
+														<img th:if="${review.getNumberOfStar() == 2}" th:src="@{/images/star2.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar2">
+														<img th:if="${review.getNumberOfStar() == 3}" th:src="@{/images/star3.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar3">
+														<img th:if="${review.getNumberOfStar() == 4}" th:src="@{/images/star4.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar4">
+														<img th:if="${review.getNumberOfStar() == 5}" th:src="@{/images/star5.png}" class="nagoyameshi-review-logo me-1" alt="NumberOfStar5">
+														
+														<hr class="mb-3">
+
+														<h3 class="card-title mb-3" th:text="${review.getCommentTitle()}"></h3>
+
+														<p class="card-text mb-2">
+															<span th:text="${review.getCommentContent()}"></span>
+														</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+			
+			<!-- フッター -->
+			<div th:replace="~{fragment :: footer}"></div>
+		</div>
+
+		<div th:replace="~{fragment :: scripts}"></div>
+		
+		<!-- Flatpickr -->
+		<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+		<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script> // 日本語にする設定
+		<script th:src="@{/js/flatpickr.js}"></script>
+	</body>
+</html>
